@@ -51,7 +51,6 @@ module IntuitIdsAggcat
     # should be one section for Rails environment:
     #
     #   development:
-    #   development:
     #     certificate_path: path to private key
     #     issuer_id: SAML issuer ID provided by intuit
     #     oauth_consumer_key: OAuth consumer key
