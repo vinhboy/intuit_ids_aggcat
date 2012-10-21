@@ -84,6 +84,7 @@ EOF_XML
           request.set_form_data({"saml_assertion"=>saml_assertion_b64})
           http.use_ssl = true
           http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+          #http.set_debug_output($stdout)
           response = http.request(request)
           params = CGI::parse(response.body)
           return {oauth_token_secret: params["oauth_token_secret"][0],
