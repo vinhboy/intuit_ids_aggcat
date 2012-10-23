@@ -6,6 +6,13 @@ class Credentials; end
 class Credential; end
 class Challenge; end
 class ChallengeResponses; end
+class BankingAccount; end
+class CreditAccount; end
+class LoanAccount; end
+class InvestmentAccount; end
+class RewardsAccount; end
+class OtherAccount; end
+class Account; end
 
 class Institutions
   include XML::Mapping
@@ -14,7 +21,7 @@ end
 
 class Institution
   include XML::Mapping
-  text_node :id, "institutionId", :default_value => nil
+  numeric_node :id, "institutionId", :default_value => nil
   text_node :name, "institutionName", :default_value => nil
   text_node :url, "homeUrl", :default_value => nil
   text_node :phone, "phoneNumber", :default_value => nil
@@ -23,7 +30,7 @@ end
 
 class InstitutionDetail
   include XML::Mapping
-  text_node :id, "institutionId", :default_value => nil
+  numeric_node :id, "institutionId", :default_value => nil
   text_node :name, "institutionName", :default_value => nil
   text_node :url, "homeUrl", :default_value => nil
   text_node :phone, "phoneNumber", :default_value => nil
@@ -99,3 +106,53 @@ class ChallengeResponses
   include XML::Mapping
   text_node :response, "response", :default_value => nil
 end
+
+class AccountList
+  include XML::Mapping
+  array_node :banking_accounts, "BankingAccount"
+  array_node :credit_accounts, "CreditAccount"
+  array_node :loan_accounts, "LoanAccount"
+  array_node :investment_accounts, "InvestmentAccount"
+  array_node :rewards_accounts, "RewardsAccount"
+  array_node :other_accounts, "OtherAccount"
+end
+
+class Account
+  include XML::Mapping
+  numeric_node :account_id, "accountId"
+  text_node :status, "status"
+  text_node :account_number, "accountNumber"
+  text_node :account_number_real, "accountNumberReal"
+  text_node :account_nickname, "accountNickname"
+  numeric_node :display_position, "displayPosition"
+  numeric_node :institution_id, "institutionId"
+  text_node :description, "description"
+  text_node :registered_user_name, "registeredUserName"
+  numeric_node :balance_amount, "balanceAmount"
+  text_node :balance_date, "balanceDate"
+  numeric_node :balance_previous_amount, "balancePreviousAmount"
+  text_node :last_transaction_date, "lastTxnDate"
+  text_node :aggregation_success_date, "aggrSuccessDate"
+  text_node :aggregation_attempt_date, "aggrAttemptDate"
+  text_node :currency_code, "currencyCode"
+  text_node :bank_id, "bankId"
+  numeric_node :institution_login_id, "institutionLongId"
+end
+
+#class BankingAccount < Account
+#  text_node :banking_account_type, "bankingAccountType"
+#  text_node :posted_date, "postedDate"
+#  numeric_node :available_balance_amount, "availableBalanceAmount"
+#  text_node :origination_date, "originationDate"
+#  text_node :open_date, "openDate"
+#  numeric_node :period_interest_rate, "periodInterestRate"
+#  numeric_node :period_deposit_amount, "periodDepositAmount"
+#  numeric_node :period_interest_amount, "periodInterestAmount"
+#  numeric_node :interest_amount_ytd, "interestAmountYtd"
+#  numeric_node :interest_prior_amount_ytd, "interestPriorAmountYtd"
+#  text_node :maturity_date, "maturityDate"
+#  numeric_node :maturity_amount, "maturityAmount"
+#end
+
+#class CreditAccount < Account
+#end

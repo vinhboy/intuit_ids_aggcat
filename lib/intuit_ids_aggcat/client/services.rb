@@ -19,8 +19,9 @@ module IntuitIdsAggcat
         # Gets all institutions supported by Intuit. If oauth_token_info isn't provided, new tokens are provisioned using "default" user
         # consumer_key and consumer_secret will be retrieved from the Configuration class if not provided
         def get_institutions oauth_token_info = IntuitIdsAggcat::Client::Saml.get_tokens("default"), consumer_key = IntuitIdsAggcat.config.oauth_consumer_key, consumer_secret = IntuitIdsAggcat.config.oauth_consumer_secret
-          response_xml = oauth_get_request "https://financialdatafeed.platform.intuit.com/rest-war/v1/institutions", oauth_token_info, consumer_key, consumer_secret
-          institutions = Institutions.load_from_xml(response_xml.root)
+          response = oauth_get_request "https://financialdatafeed.platform.intuit.com/rest-war/v1/institutions", oauth_token_info, consumer_key, consumer_secret
+          institutions = Institutions.load_from_xml(response[:response_xml].root)
+          File.open("institutions.xml", 'w') {|f| f.write(response[:response_xml].to_s) }
           institutions.institutions
         end
 
@@ -28,8 +29,8 @@ module IntuitIdsAggcat
         # Gets the institution details for id. If oauth_token_info isn't provided, new tokens are provisioned using "default" user
         # consumer_key and consumer_secret will be retrieved from the Configuration class if not provided
         def get_institution_detail id, oauth_token_info = IntuitIdsAggcat::Client::Saml.get_tokens("default"), consumer_key = IntuitIdsAggcat.config.oauth_consumer_key, consumer_secret = IntuitIdsAggcat.config.oauth_consumer_secret
-          response_xml = oauth_get_request "https://financialdatafeed.platform.intuit.com/rest-war/v1/institutions/#{id}", oauth_token_info, consumer_key, consumer_secret
-          institutions = InstitutionDetail.load_from_xml(response_xml.root)
+          response = oauth_get_request "https://financialdatafeed.platform.intuit.com/rest-war/v1/institutions/#{id}", oauth_token_info, consumer_key, consumer_secret
+          institutions = InstitutionDetail.load_from_xml(response[:response_xml].root)
           institutions
         end
 

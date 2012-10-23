@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.rubyforge_project = "intuit_ids_aggcat"
 
   s.files = [
-    'README.rdoc',
+    'README.markdown',
     'LICENSE.txt'
   ]
   s.files += Dir['lib/**/*.rb']
