@@ -61,6 +61,13 @@ end
 
 class InstitutionLogin
   include XML::Mapping
+  # added namespaces to make root element compliant with Intuit's expectation
+  def post_save xml, options={:mapping=>:_default}
+    # using REXML's element namespace method doesn't seem to set the namespace correctly...?
+    xml.root.add_attributes("xmlns"=>"http://schema.intuit.com/platform/fdatafeed/institutionlogin/v1")
+    xml.root.add_namespace "xsi", "http://www.w3.org/2001/XMLSchema-instance"
+    xml.root.add_namespace "xsd", "http://www.w3.org/2001/XMLSchema"
+  end
   self.root_element_name "InstitutionLogin"
   object_node :credentials, "credentials", :default_value => nil
   object_node :challenge_responses, "challengeResponses", :default_value => nil

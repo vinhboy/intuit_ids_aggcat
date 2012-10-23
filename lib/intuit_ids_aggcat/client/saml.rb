@@ -99,11 +99,10 @@ EOF_XML
           oauth_token_info
         end
 
-        def get_tokens issuer_id = IntuitIdsAggcat.config.issuer_id, oauth_consumer_key = IntuitIdsAggcat.config.oauth_consumer_key, oauth_consumer_secret = IntuitIdsAggcat.config.oauth_consumer_secret, certificate_path = IntuitIdsAggcat.config.certificate_path
+        def get_tokens username, issuer_id = IntuitIdsAggcat.config.issuer_id, oauth_consumer_key = IntuitIdsAggcat.config.oauth_consumer_key, oauth_consumer_secret = IntuitIdsAggcat.config.oauth_consumer_secret, certificate_path = IntuitIdsAggcat.config.certificate_path
           if !IntuitIdsAggcat.config.oauth_token_info.nil? && !IntuitIdsAggcat.config.oauth_token_info[:oauth_token].nil? && IntuitIdsAggcat.config.oauth_token_info[:token_expiry] > (Time.now + 2)
             IntuitIdsAggcat.config.oauth_token_info
           else
-            username = "default"
             oauth_token_info = get_oauth_info issuer_id, username, oauth_consumer_key, oauth_consumer_secret, certificate_path
             IntuitIdsAggcat.config(:oauth_token_info => oauth_token_info)
             oauth_token_info
