@@ -6,13 +6,13 @@ class Credentials; end
 class Credential; end
 class Challenge; end
 class ChallengeResponses; end
-class BankingAccount; end
-class CreditAccount; end
-class LoanAccount; end
-class InvestmentAccount; end
-class RewardsAccount; end
-class OtherAccount; end
 class Account; end
+class BankingAccount < Account; end
+class CreditAccount < Account; end
+class LoanAccount < Account; end
+class InvestmentAccount < Account; end
+class RewardsAccount < Account; end
+class OtherAccount < Account; end
 
 class Institutions
   include XML::Mapping
@@ -139,20 +139,20 @@ class Account
   numeric_node :institution_login_id, "institutionLongId"
 end
 
-#class BankingAccount < Account
-#  text_node :banking_account_type, "bankingAccountType"
-#  text_node :posted_date, "postedDate"
-#  numeric_node :available_balance_amount, "availableBalanceAmount"
-#  text_node :origination_date, "originationDate"
-#  text_node :open_date, "openDate"
-#  numeric_node :period_interest_rate, "periodInterestRate"
-#  numeric_node :period_deposit_amount, "periodDepositAmount"
-#  numeric_node :period_interest_amount, "periodInterestAmount"
-#  numeric_node :interest_amount_ytd, "interestAmountYtd"
-#  numeric_node :interest_prior_amount_ytd, "interestPriorAmountYtd"
-#  text_node :maturity_date, "maturityDate"
-#  numeric_node :maturity_amount, "maturityAmount"
-#end
+class BankingAccount < Account
+  text_node :banking_account_type, "bankingAccountType"
+  text_node :posted_date, "postedDate"
+  numeric_node :available_balance_amount, "availableBalanceAmount"
+  text_node :origination_date, "originationDate"
+  text_node :open_date, "openDate"
+  numeric_node :period_interest_rate, "periodInterestRate"
+  numeric_node :period_deposit_amount, "periodDepositAmount"
+  numeric_node :period_interest_amount, "periodInterestAmount"
+  numeric_node :interest_amount_ytd, "interestAmountYtd"
+  numeric_node :interest_prior_amount_ytd, "interestPriorAmountYtd"
+  text_node :maturity_date, "maturityDate"
+  numeric_node :maturity_amount, "maturityAmount"
+end
 
 #class CreditAccount < Account
 #end
