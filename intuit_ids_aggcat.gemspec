@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
 
   # specify any dependencies here; for example:
   # s.add_development_dependency "rspec"
-  s.add_development_dependency "oauth", "0.4.7"
+  s.add_runtime_dependency "oauth", "0.4.7"
   s.add_runtime_dependency "nokogiri", "1.5.5"
   s.add_runtime_dependency "xml-mapping"
   s.add_runtime_dependency "activesupport", "3.2.3"
