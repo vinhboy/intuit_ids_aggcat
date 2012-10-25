@@ -1,7 +1,6 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
 require "intuit_ids_aggcat/version"
-require "intuit_ids_aggcat/core"
 
 Gem::Specification.new do |s|
   s.name        = "intuit_ids_aggcat"
