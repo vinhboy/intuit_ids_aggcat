@@ -1,4 +1,5 @@
 # forward classdefs for mapping
+module IntuitIdsAggcat
 class Institution; end
 class Address; end
 class Key; end
@@ -9,10 +10,6 @@ class ChallengeResponses; end
 class Account; end
 class BankingAccount < Account; end
 class CreditAccount < Account; end
-class LoanAccount < Account; end
-class InvestmentAccount < Account; end
-class RewardsAccount < Account; end
-class OtherAccount < Account; end
 
 class Institutions
   include XML::Mapping
@@ -109,50 +106,73 @@ end
 
 class AccountList
   include XML::Mapping
-  array_node :banking_accounts, "BankingAccount"
-  array_node :credit_accounts, "CreditAccount"
-  array_node :loan_accounts, "LoanAccount"
-  array_node :investment_accounts, "InvestmentAccount"
-  array_node :rewards_accounts, "RewardsAccount"
-  array_node :other_accounts, "OtherAccount"
+  array_node :banking_accounts, "BankingAccount", :class => BankingAccount, :default_value => nil
+  array_node :credit_accounts, "CreditAccount", :class => CreditAccount, :default_value => nil
+  #array_node :loan_accounts, "LoanAccount", :default_value => nil
+  #array_node :investment_accounts, "InvestmentAccount", :default_value => nil
+  #array_node :rewards_accounts, "RewardsAccount", :default_value => nil
+  #array_node :other_accounts, "OtherAccount", :default_value => nil
 end
 
 class Account
   include XML::Mapping
-  numeric_node :account_id, "accountId"
-  text_node :status, "status"
-  text_node :account_number, "accountNumber"
-  text_node :account_number_real, "accountNumberReal"
-  text_node :account_nickname, "accountNickname"
-  numeric_node :display_position, "displayPosition"
-  numeric_node :institution_id, "institutionId"
-  text_node :description, "description"
-  text_node :registered_user_name, "registeredUserName"
-  numeric_node :balance_amount, "balanceAmount"
-  text_node :balance_date, "balanceDate"
-  numeric_node :balance_previous_amount, "balancePreviousAmount"
-  text_node :last_transaction_date, "lastTxnDate"
-  text_node :aggregation_success_date, "aggrSuccessDate"
-  text_node :aggregation_attempt_date, "aggrAttemptDate"
-  text_node :currency_code, "currencyCode"
-  text_node :bank_id, "bankId"
-  numeric_node :institution_login_id, "institutionLongId"
+  numeric_node :account_id, "accountId", :default_value => nil
+  text_node :status, "status", :default_value => nil
+  text_node :account_number, "accountNumber", :default_value => nil
+  text_node :account_number_real, "accountNumberReal", :default_value => nil
+  text_node :account_nickname, "accountNickname", :default_value => nil
+  numeric_node :display_position, "displayPosition", :default_value => nil
+  numeric_node :institution_id, "institutionId", :default_value => nil
+  text_node :description, "description", :default_value => nil
+  text_node :registered_user_name, "registeredUserName", :default_value => nil
+  numeric_node :balance_amount, "balanceAmount", :default_value => nil
+  text_node :balance_date, "balanceDate", :default_value => nil
+  numeric_node :balance_previous_amount, "balancePreviousAmount", :default_value => nil
+  text_node :last_transaction_date, "lastTxnDate", :default_value => nil
+  text_node :aggregation_success_date, "aggrSuccessDate", :default_value => nil
+  text_node :aggregation_attempt_date, "aggrAttemptDate", :default_value => nil
+  text_node :currency_code, "currencyCode", :default_value => nil
+  text_node :bank_id, "bankId", :default_value => nil
+  numeric_node :institution_login_id, "institutionLongId", :default_value => nil
 end
 
 class BankingAccount < Account
-  text_node :banking_account_type, "bankingAccountType"
-  text_node :posted_date, "postedDate"
-  numeric_node :available_balance_amount, "availableBalanceAmount"
-  text_node :origination_date, "originationDate"
-  text_node :open_date, "openDate"
-  numeric_node :period_interest_rate, "periodInterestRate"
-  numeric_node :period_deposit_amount, "periodDepositAmount"
-  numeric_node :period_interest_amount, "periodInterestAmount"
-  numeric_node :interest_amount_ytd, "interestAmountYtd"
-  numeric_node :interest_prior_amount_ytd, "interestPriorAmountYtd"
-  text_node :maturity_date, "maturityDate"
-  numeric_node :maturity_amount, "maturityAmount"
+  include XML::Mapping
+  text_node :banking_account_type, "bankingAccountType", :default_value => nil
+  text_node :posted_date, "postedDate", :default_value => nil
+  numeric_node :available_balance_amount, "availableBalanceAmount", :default_value => nil
+  text_node :origination_date, "originationDate", :default_value => nil
+  text_node :open_date, "openDate", :default_value => nil
+  numeric_node :period_interest_rate, "periodInterestRate", :default_value => nil
+  numeric_node :period_deposit_amount, "periodDepositAmount", :default_value => nil
+  numeric_node :period_interest_amount, "periodInterestAmount", :default_value => nil
+  numeric_node :interest_amount_ytd, "interestAmountYtd", :default_value => nil
+  numeric_node :interest_prior_amount_ytd, "interestPriorAmountYtd", :default_value => nil
+  text_node :maturity_date, "maturityDate", :default_value => nil
+  numeric_node :maturity_amount, "maturityAmount", :default_value => nil
 end
 
-#class CreditAccount < Account
-#end
+class CreditAccount < Account
+  include XML::Mapping
+  text_node :credit_account_type, "creditAccountType", :default_value => nil
+  text_node :detailed_description, "detailedDescription", :default_value => nil
+  numeric_node :interest_rate, "interestRate", :default_value => nil
+  numeric_node :credit_available_amount, "creditAvailableAmount", :default_value => nil
+  numeric_node :credit_max_amount, "creditMaxAmount", :default_value => nil
+  numeric_node :cash_advance_max_amount, "cashAdvanceMaxAmount", :default_value => nil
+  numeric_node :cash_advance_balance, "cashAdvanceBalance", :default_value => nil
+  numeric_node :cash_advance_interest_rate, "cashAdvanceInterestRate", :default_value => nil
+  numeric_node :current_balance, "currentBalance", :default_value => nil
+  numeric_node :payment_min_amount, "paymentMinAmount", :default_value => nil
+  text_node :payment_due_date, "paymentDueDate", :default_value => nil
+  numeric_node :previous_balance, "previousBalance", :default_value => nil
+  text_node :statement_end_date, "statementEndDate", :default_value => nil
+  numeric_node :statement_purchase_amount, "statementPurchaseAmount", :default_value => nil
+  numeric_node :statement_finance_amount, "statementFinanceAmount", :default_value => nil
+  numeric_node :past_due_amount, "pastDueAmount", :default_value => nil
+  numeric_node :last_payment_amount, "lastPaymentAmount", :default_value => nil
+  text_node :last_payment_date, "lastPaymentDate", :default_value => nil
+  numeric_node :statement_close_balance, "statementCloseBalance", :default_value => nil
+  numeric_node :statement_last_fee_amount, "statementLastFeeAmount", :default_value => nil
+end
+end

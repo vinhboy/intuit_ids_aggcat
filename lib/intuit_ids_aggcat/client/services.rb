@@ -21,7 +21,6 @@ module IntuitIdsAggcat
         def get_institutions oauth_token_info = IntuitIdsAggcat::Client::Saml.get_tokens("default"), consumer_key = IntuitIdsAggcat.config.oauth_consumer_key, consumer_secret = IntuitIdsAggcat.config.oauth_consumer_secret
           response = oauth_get_request "https://financialdatafeed.platform.intuit.com/rest-war/v1/institutions", oauth_token_info, consumer_key, consumer_secret
           institutions = Institutions.load_from_xml(response[:response_xml].root)
-          File.open("institutions.xml", 'w') {|f| f.write(response[:response_xml].to_s) }
           institutions.institutions
         end
 
@@ -62,6 +61,14 @@ module IntuitIdsAggcat
           il = InstitutionLogin.new
           il.credentials = creds
           oauth_post_request url, il.save_to_xml.to_s, oauth_token_info
+        end
+
+        ##
+        # Gets all accounts for a customer
+        def get_customer_accounts username, oauth_token_info = IntuitIdsAggcat::Client::Saml.get_tokens(username), consumer_key = IntuitIdsAggcat.config.oauth_consumer_key, consumer_secret = IntuitIdsAggcat.config.oauth_consumer_secret
+          url = "https://financialdatafeed.platform.intuit.com/rest-war/v1/accounts/"
+          response = oauth_get_request url, oauth_token_info
+          accounts = AccountList.load_from_xml(response[:response_xml].root)
         end
 
         ##
