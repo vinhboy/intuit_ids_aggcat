@@ -67,6 +67,35 @@ The gem currently provides the following helper class methods from IntuitIdsAggc
   
 Return values from all methods except get_institutions and get_institution_detail are a hash with a response_code key with the HTTP response code value and a response_xml key containing a REXML::Document object.
   
+### Examples
+  
+	institutions = IntuitIdsAggcat::Client::Services.get_institutions # get a list of all institutions
+	i = IntuitIdsAggcat::Client::Services.get_institution_detail 14007 # get details for institution id 14007
+	x = IntuitIdsAggcat::Client::Services.discover_and_add_accounts_with_credentials 100000, 1, { "Banking Userid" => "direct", "Banking Password" => "anyvalue" } # sets up aggregation for an Intuit test ID as user 1
+	x = IntuitIdsAggcat::Client::Services.delete_customer 1 # stops aggregation for user 1
+	x = IntuitIdsAggcat::Client::Services.discover_and_add_accounts_with_credentials 100000, 1, { "Banking Userid" => "tfa_text", "Banking Password" => "anyvalue" } # sets up aggregation for an Intuit test ID as user 1but results in a multi-factor auth text-based challenge
+	y = IntuitIdsAggcat::Client::Services.challenge_response 100000, 1, "challenge_response", x[:challenge_session_id], x[:challenge_node_id] #responds to challenge question above with "challenge_response"
+	x = IntuitIdsAggcat::Client::Services.delete_customer 1 # stops aggregation for user 1
+	x = IntuitIdsAggcat::Client::Services.discover_and_add_accounts_with_credentials 100000, 1, { "Banking Userid" => "tfa_text", "Banking Password" => "anyvalue" } # sets up aggregation for an Intuit test ID as user 1but results in a multi-factor auth text-based challenge
+	y = IntuitIdsAggcat::Client::Services.challenge_response 100000, 1, "challenge_response", x[:challenge_session_id], x[:challenge_node_id] #responds to challenge question above with "challenge_response"
+	x = IntuitIdsAggcat::Client::Services.delete_customer 1 # stops aggregation for user 1
+	x = IntuitIdsAggcat::Client::Services.discover_and_add_accounts_with_credentials 100000, 1, { "Banking Userid" => "tfa_choicet", "Banking Password" => "anyvalue" } # sets up aggregation for an Intuit test ID as user 1but results in a multi-factor auth text-based challenge
+	y = IntuitIdsAggcat::Client::Services.challenge_response 100000, 1, "Madison", x[:challenge_session_id], x[:challenge_node_id] #responds to challenge question above with Madison choice value response
+	x = IntuitIdsAggcat::Client::Services.delete_customer 1 # stops aggregation for user 1
+  
+Testing
+----------
+In order to thoroughly test the Intuit integration, many of the RSpec tests included with this gem make live calls to the Intuit services and use Intuit's test financial institutions/customers/accounts. In order for this to work, real OAuth tokens and the corresponding private  key and issuer ID need to be used. To configure these the tests assume there is a YAML configuration in spec/config/real_config.yml in the following format:  
+  
+`certificate_path: key_file`  
+`issuer_id: issuer_id`  
+`oauth_consumer_key: consumer_key`  
+`oauth_consumer_secret: consumer_secret`  
+  
+Note that the tests do create a test user to validate the integration and this will count towards your Intuit usage. In general the tests always delete the user provided the tests are not stopped in the middle of execution or experience an exception that interrupt the test, so there should be a net effect of one additional user per month that you execute the tests.  
+  
+The .gitignore file contains spec/config/real_config.yml and spec/config/real_cert.key to prevent sensitive information from being checked in. Note that if you change the names, or .gitignore is modified, this may not hold true. Exercise caution when commiting code to public repos.  
+  
 Contributing
 -----------------
 Feel free to fork this repo, make changes and submit a pull request. 

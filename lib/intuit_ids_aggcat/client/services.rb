@@ -49,10 +49,10 @@ module IntuitIdsAggcat
         # Returns a hash produced by discover_account_data_to_hash with the following keys:
         #    discover_response   : hash including the following keys:
         #                              response_code:        HTTP response code from Intuit
-        #                              response_xml :         XML returned by Intuit
+        #                              response_xml :        XML returned by Intuit
         #    accounts            : Ruby hash with accounts if returned by discover call
         #    challenge_type      : text description of the type of challenge requested, if applicable
-        #                          "none" | "choice" | "image" | "text" | "unknown"
+        #                          "none" | "choice" | "image" | "text" 
         #    challenge           : Ruby hash with the detail of the challenge if applicable
         #    challenge_session_id: challenge session ID to pass to challenge_response if this is a challenge
         #    challenge_node_id   : challenge node ID to pass to challenge_response if this is a challenge 
