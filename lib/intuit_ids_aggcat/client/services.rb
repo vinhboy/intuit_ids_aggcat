@@ -71,7 +71,6 @@ module IntuitIdsAggcat
           il = InstitutionLogin.new
           il.credentials = creds
           daa = oauth_post_request url, il.save_to_xml.to_s, oauth_token_info
-          puts "daa = #{daa}"
           discover_account_data_to_hash daa
         end
 
@@ -87,7 +86,6 @@ module IntuitIdsAggcat
           cr.response = response
           il = IntuitIdsAggcat::InstitutionLogin.new
           il.challenge_responses = cr
-          puts "challenge response:\n#{il.save_to_xml.to_s}"
           daa = oauth_post_request url, il.save_to_xml.to_s, oauth_token_info, { "challengeSessionId" => challenge_session_id, "challengeNodeId" => challenge_node_id }
           discover_account_data_to_hash daa
         end
@@ -143,7 +141,6 @@ module IntuitIdsAggcat
           consumer = OAuth::Consumer.new(consumer_key, consumer_secret, options)
           access_token = OAuth::AccessToken.new(consumer, oauth_token, oauth_token_secret)
           response = access_token.post(url, body, { "Content-Type"=>'application/xml', 'Host' => 'financialdatafeed.platform.intuit.com' }.merge(headers))
-          puts "response body = #{response.body}"
           response_xml = REXML::Document.new response.body
           
           # handle challenge responses from discoverAndAcccounts flow
