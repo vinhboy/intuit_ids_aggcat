@@ -92,7 +92,7 @@ In order to thoroughly test the Intuit integration, many of the RSpec tests incl
 `oauth_consumer_key: consumer_key`  
 `oauth_consumer_secret: consumer_secret`  
   
-Note that the tests do create a test user to validate the integration and this will count towards your Intuit usage. In general the tests always delete the user provided the tests are not stopped in the middle of execution or experience an exception that interrupt the test, so there should be a net effect of one additional user per month that you execute the tests.  
+Note that the tests do create a test user to validate the integration and this will count towards your Intuit usage. In general the tests always delete the user provided the tests are not stopped in the middle of execution or experience an exception that interrupt the test, so there should be a net effect of one additional user per month that you execute the tests.  The test user ID is "9cj2hbjfgh47cna72" - this random string should prevent collision with a real user in your system.
   
 The .gitignore file contains spec/config/real_config.yml and spec/config/real_cert.key to prevent sensitive information from being checked in. Note that if you change the names, or .gitignore is modified, this may not hold true. Exercise caution when commiting code to public repos.  
   

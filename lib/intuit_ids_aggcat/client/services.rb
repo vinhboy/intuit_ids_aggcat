@@ -98,6 +98,20 @@ module IntuitIdsAggcat
           accounts = AccountList.load_from_xml(response[:response_xml].root)
         end
 
+        ##
+        # Get transactions for a specific account and timeframe
+        def get_account_transactions username, account_id, start_date, end_date = nil, oauth_token_info = IntuitIdsAggcat::Client::Saml.get_tokens(username), consumer_key = IntuitIdsAggcat.config.oauth_consumer_key, consumer_secret = IntuitIdsAggcat.config.oauth_consumer_secret
+          txn_start = start_date.strftime("%Y-%m-%d")
+          url = "https://financialdatafeed.platform.intuit.com/rest-war/v1/accounts/#{account_id}/transactions?txnStartDate=#{txn_start}"
+          if !end_date.nil?
+            txn_end = end_date.strftime("%Y-%m-%d")
+            url = "#{url}&txnEndDate=#{txn_end}"
+          end
+          response = oauth_get_request url, oauth_token_info
+          xml = REXML::Document.new response[:response_xml].to_s
+          tl = IntuitIdsAggcat::TransactionList.load_from_xml xml.root
+        end
+
         ## 
         # Helper method for parsing discover account response data
         def discover_account_data_to_hash daa
