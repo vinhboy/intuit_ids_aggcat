@@ -27,8 +27,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec", "~> 2.11"
   s.add_development_dependency "vcr", "~> 2.2"
   s.add_development_dependency "fakeweb", "~> 1.3"
-  s.add_runtime_dependency "oauth", "0.4.7"
-  s.add_runtime_dependency "nokogiri", "1.5.5"
+  s.add_runtime_dependency "oauth", "~> 0.4"
+  s.add_runtime_dependency "nokogiri", "~> 1.5"
   s.add_runtime_dependency "xml-mapping"
-  s.add_runtime_dependency "activesupport", "3.2.3"
+  s.add_runtime_dependency "activesupport"
 end
