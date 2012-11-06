@@ -141,7 +141,7 @@ module IntuitIdsAggcat
 
   class Challenges
     include XML::Mapping
-    object_node :challenge, "challenge", :class => Challenge, :default_value => nil
+    array_node :challenge, "challenge", :class => Challenge, :default_value => nil
   end
 
   class Choice

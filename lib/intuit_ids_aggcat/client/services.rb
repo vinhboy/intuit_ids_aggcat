@@ -42,6 +42,14 @@ module IntuitIdsAggcat
         end
 
         ##
+        # Deletes the a specific account for a customer from aggregation at Intuit.
+        # username and account ID must be provided, if no oauth_token_info is provided, new tokens will be provisioned using username
+        def delete_account username, account_id, oauth_token_info = IntuitIdsAggcat::Client::Saml.get_tokens(username), consumer_key = IntuitIdsAggcat.config.oauth_consumer_key, consumer_secret = IntuitIdsAggcat.config.oauth_consumer_secret
+          url = "https://financialdatafeed.platform.intuit.com/rest-war/v1/accounts/#{account_id}"
+          oauth_delete_request url, oauth_token_info
+        end
+
+        ##
         # Discovers and adds accounts using credentials
         # institution_id is the ID of the institution, username is the ID for this customer's accounts at Intuit and must be used for future requests,
         # creds_hash is a hash object of key value pairs used for authentication
