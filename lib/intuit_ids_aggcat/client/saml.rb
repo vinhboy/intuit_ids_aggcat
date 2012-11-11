@@ -5,6 +5,7 @@ require 'securerandom'
 require 'active_support'
 require 'net/https'
 require 'cgi'
+require 'uri'
 
 module IntuitIdsAggcat
 
@@ -74,7 +75,12 @@ EOF_XML
           oauth_url="https://oauth.intuit.com/oauth/v1/get_access_token_by_saml"
 
           uri = URI.parse(oauth_url)
-          http = Net::HTTP.new(uri.host, uri.port)
+          if IntuitIdsAggcat.config.proxy.nil?
+            http = Net::HTTP.new(uri.host, uri.port)
+          else
+            proxy_uri = URI.parse(IntuitIdsAggcat.config.proxy)
+            http = Net::HTTP::Proxy(proxy_uri.host,proxy_uri.port).new(uri.host, uri.port)
+          end
           request = Net::HTTP::Post.new(uri.request_uri)
           request["Content-Type"] = "application/x-www-form-urlencoded"
           request["Content-Language"] = "en-US"
@@ -84,11 +90,12 @@ EOF_XML
           request.set_form_data({"saml_assertion"=>saml_assertion_b64})
           http.use_ssl = true
           http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-          #http.set_debug_output($stdout)
+          http.set_debug_output($stdout)
           response = http.request(request)
           params = CGI::parse(response.body)
           return {oauth_token_secret: params["oauth_token_secret"][0],
                   oauth_token: params["oauth_token"][0] }
+          
         end
         def get_oauth_info issuer_id, username, oauth_consumer_key, oauth_consumer_secret, private_key_path
           instant = Time.now

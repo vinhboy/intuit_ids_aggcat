@@ -45,6 +45,7 @@ module IntuitIdsAggcat
         # Deletes the a specific account for a customer from aggregation at Intuit.
         # username and account ID must be provided, if no oauth_token_info is provided, new tokens will be provisioned using username
         def delete_account username, account_id, oauth_token_info = IntuitIdsAggcat::Client::Saml.get_tokens(username), consumer_key = IntuitIdsAggcat.config.oauth_consumer_key, consumer_secret = IntuitIdsAggcat.config.oauth_consumer_secret
+          puts "in gem, username = #{username}, account = #{account_id}."
           url = "https://financialdatafeed.platform.intuit.com/rest-war/v1/accounts/#{account_id}"
           oauth_delete_request url, oauth_token_info
         end
@@ -159,7 +160,8 @@ module IntuitIdsAggcat
           oauth_token = oauth_token_info[:oauth_token]
           oauth_token_secret = oauth_token_info[:oauth_token_secret]
 
-          options = { :request_token_path => 'https://financialdatafeed.platform.intuit.com', :timeout => timeout} 
+          options = { :request_token_path => 'https://financialdatafeed.platform.intuit.com', :timeout => timeout } 
+          options = options.merge({ :proxy => IntuitIdsAggcat.config.proxy}) if !IntuitIdsAggcat.config.proxy.nil?
           consumer = OAuth::Consumer.new(consumer_key, consumer_secret, options)
           access_token = OAuth::AccessToken.new(consumer, oauth_token, oauth_token_secret)
           response = access_token.post(url, body, { "Content-Type"=>'application/xml', 'Host' => 'financialdatafeed.platform.intuit.com' }.merge(headers))
@@ -181,7 +183,8 @@ module IntuitIdsAggcat
           oauth_token = oauth_token_info[:oauth_token]
           oauth_token_secret = oauth_token_info[:oauth_token_secret]
 
-          options = { :request_token_path => 'https://financialdatafeed.platform.intuit.com', :timeout => timeout} 
+          options = { :request_token_path => 'https://financialdatafeed.platform.intuit.com', :timeout => timeout } 
+          options = options.merge({ :proxy => IntuitIdsAggcat.config.proxy}) if !IntuitIdsAggcat.config.proxy.nil?
           consumer = OAuth::Consumer.new(consumer_key, consumer_secret, options)
           access_token = OAuth::AccessToken.new(consumer, oauth_token, oauth_token_secret)
           response = access_token.get(url, { "Content-Type"=>'application/xml', 'Host' => 'financialdatafeed.platform.intuit.com' })
@@ -195,7 +198,8 @@ module IntuitIdsAggcat
           oauth_token = oauth_token_info[:oauth_token]
           oauth_token_secret = oauth_token_info[:oauth_token_secret]
 
-          options = { :request_token_path => 'https://financialdatafeed.platform.intuit.com', :timeout => timeout} 
+          options = { :request_token_path => 'https://financialdatafeed.platform.intuit.com', :timeout => timeout }
+          options = options.merge({ :proxy => IntuitIdsAggcat.config.proxy}) if !IntuitIdsAggcat.config.proxy.nil? 
           consumer = OAuth::Consumer.new(consumer_key, consumer_secret, options)
           access_token = OAuth::AccessToken.new(consumer, oauth_token, oauth_token_secret)
           response = access_token.delete(url, { "Content-Type"=>'application/xml', 'Host' => 'financialdatafeed.platform.intuit.com' })

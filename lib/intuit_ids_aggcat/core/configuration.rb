@@ -146,6 +146,7 @@ module IntuitIdsAggcat
       add_option :oauth_consumer_key
       add_option :oauth_consumer_secret
       add_option :oauth_token_info
+      add_option :proxy
 
     end
   end
