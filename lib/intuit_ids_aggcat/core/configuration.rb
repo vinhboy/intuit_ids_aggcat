@@ -47,26 +47,6 @@ module IntuitIdsAggcat
         credentials
       end
 
-      # Used to create a new Configuration object with the given modifications.
-      # The current configuration object is not modified.
-      #
-      #   AWS.config(:max_retries => 2)
-      #
-      #   no_retries_config = AWS.config.with(:max_retries => 0)
-      #
-      #   AWS.config.max_retries        #=> 2
-      #   no_retries_config.max_retries #=> 0
-      #
-      # You can use these configuration objects returned by #with to create
-      # AWS objects:
-      #
-      #   AWS::S3.new(:config => no_retries_config)
-      #   AWS::SQS.new(:config => no_retries_config)
-      #
-      # @param options (see AWS.config)
-      # @option options (see AWS.config)
-      # @return [Configuration] Copies the current configuration and returns
-      #   a new one with modifications as provided in +:options+.
       def with options = {}
 
         # symbolize option keys
@@ -142,6 +122,8 @@ module IntuitIdsAggcat
       end
 
       add_option :certificate_path
+      add_option :certificate_string
+      add_option :certificate_password
       add_option :issuer_id
       add_option :oauth_consumer_key
       add_option :oauth_consumer_secret

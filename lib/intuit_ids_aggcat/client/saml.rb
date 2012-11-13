@@ -15,7 +15,7 @@ module IntuitIdsAggcat
       @token_timeout = 600
       class << self
 
-        def get_saml_assertion_xml issuer_id, username = "default", private_key_path, instant
+        def get_saml_assertion_xml issuer_id, username = "default", private_key_path, private_key_string, private_key_password, instant
           id = "_#{SecureRandom.uuid.gsub!(/-/, '')}"
           time_format = "%Y-%m-%dT%T.%LZ"
           before = instant - 5*60
@@ -26,15 +26,19 @@ EOF_XML
           digestible_xml = get_digestible_xml(saml_assertion_xml)
           digest = calc_digest(digestible_xml).strip
           signed_info_xml = get_signed_info_xml(id, digest)
-          signature_value = get_signature_value(signed_info_xml, private_key_path)
+          signature_value = get_signature_value(signed_info_xml, private_key_path, private_key_string, private_key_password)
           saml_assertion_xml.gsub!(/%%DIGEST%%/, digest)
           saml_assertion_xml.gsub!(/%%SIGNATURE%%/, signature_value)
           return saml_assertion_xml
 
         end
 
-        def get_signature_value(signed_info_xml, private_key_path)
-          pkey = OpenSSL::PKey::RSA.new File.read(private_key_path)
+        def get_signature_value(signed_info_xml, private_key_path, private_key_string, private_key_password)
+          if !private_key_path.nil?
+            pkey = OpenSSL::PKey::RSA.new(File.read(private_key_path), private_key_password)
+          else
+            pkey = OpenSSL::PKey::RSA.new(private_key_string, private_key_password)
+          end
           signed_info_xml_canon = Nokogiri::XML(signed_info_xml).canonicalize
           digest = OpenSSL::Digest::SHA1.new
           signature = Base64.encode64 pkey.sign(digest, signed_info_xml_canon)
@@ -90,27 +94,27 @@ EOF_XML
           request.set_form_data({"saml_assertion"=>saml_assertion_b64})
           http.use_ssl = true
           http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-          http.set_debug_output($stdout)
+          #http.set_debug_output($stdout)
           response = http.request(request)
           params = CGI::parse(response.body)
           return {oauth_token_secret: params["oauth_token_secret"][0],
                   oauth_token: params["oauth_token"][0] }
           
         end
-        def get_oauth_info issuer_id, username, oauth_consumer_key, oauth_consumer_secret, private_key_path
+        def get_oauth_info issuer_id, username, oauth_consumer_key, oauth_consumer_secret, private_key_path, private_key_string, private_key_password
           instant = Time.now
-          saml_assertion_xml = get_saml_assertion_xml issuer_id, username, private_key_path, instant
+          saml_assertion_xml = get_saml_assertion_xml issuer_id, username, private_key_path, private_key_string, private_key_password, instant
           saml_assertion_b64 = Base64.strict_encode64(saml_assertion_xml)
           oauth_token_info = send_saml_assertion saml_assertion_b64, oauth_consumer_key, oauth_consumer_secret
           oauth_token_info[:token_expiry] = instant + @token_timeout
           oauth_token_info
         end
 
-        def get_tokens username, issuer_id = IntuitIdsAggcat.config.issuer_id, oauth_consumer_key = IntuitIdsAggcat.config.oauth_consumer_key, oauth_consumer_secret = IntuitIdsAggcat.config.oauth_consumer_secret, certificate_path = IntuitIdsAggcat.config.certificate_path
+        def get_tokens username, issuer_id = IntuitIdsAggcat.config.issuer_id, oauth_consumer_key = IntuitIdsAggcat.config.oauth_consumer_key, oauth_consumer_secret = IntuitIdsAggcat.config.oauth_consumer_secret, certificate_path = IntuitIdsAggcat.config.certificate_path, certificate_string = IntuitIdsAggcat.config.certificate_string, certificate_password = IntuitIdsAggcat.config.certificate_password
           if !IntuitIdsAggcat.config.oauth_token_info.nil? && !IntuitIdsAggcat.config.oauth_token_info[:oauth_token].nil? && IntuitIdsAggcat.config.oauth_token_info[:token_expiry] > (Time.now + 2)
             IntuitIdsAggcat.config.oauth_token_info
           else
-            oauth_token_info = get_oauth_info issuer_id, username, oauth_consumer_key, oauth_consumer_secret, certificate_path
+            oauth_token_info = get_oauth_info issuer_id, username, oauth_consumer_key, oauth_consumer_secret, certificate_path, certificate_string, certificate_password
             IntuitIdsAggcat.config(:oauth_token_info => oauth_token_info)
             oauth_token_info
           end

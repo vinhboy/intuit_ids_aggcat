@@ -83,7 +83,7 @@ describe IntuitIdsAggcat::Client::Services do
     x[:discover_response][:challenge_node_id].should_not be_nil
     x[:discover_response][:challenge_session_id].should_not be_nil
     x[:challenge_type].should == "text"
-    x[:challenge].challenge.text.should == "Enter your first pet's name:"
+    x[:challenge].challenge[0].text.should == "Enter your first pet's name:"
     x = IntuitIdsAggcat::Client::Services.challenge_response 100000, "9cj2hbjfgh47cna72", "test", x[:discover_response][:challenge_session_id], x[:discover_response][:challenge_node_id]
     x[:accounts].should_not be_nil
     x[:accounts].banking_accounts.count.should be > 2
@@ -98,7 +98,7 @@ describe IntuitIdsAggcat::Client::Services do
     x[:discover_response][:challenge_node_id].should_not be_nil
     x[:discover_response][:challenge_session_id].should_not be_nil
     x[:challenge_type].should == "choice"
-    x[:challenge].challenge.text.should == "Which high school did you attend?"
+    x[:challenge].challenge[0].text.should == "Which high school did you attend?"
     x = IntuitIdsAggcat::Client::Services.challenge_response 100000, "9cj2hbjfgh47cna72", "test", x[:discover_response][:challenge_session_id], x[:discover_response][:challenge_node_id]
     x[:accounts].should_not be_nil
     x[:accounts].banking_accounts.count.should be > 2

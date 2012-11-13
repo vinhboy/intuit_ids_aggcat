@@ -25,6 +25,8 @@ Or in a Rails environment by creating a file *config/intuit_ids_aggcat.yml* with
 &nbsp;&nbsp;`oauth_consumer_key: consumer_key`  
 &nbsp;&nbsp;`oauth_consumer_secret: consumer_secret`  
   
+In addition to providing a certificate path, you can also pass a certificate string using the the certificate_string key in YAML or the symbol :certificate_string in the hash when calling IntuitIdsAggCat.config. You may optionally pass a certificate password as certificate_password if your private certificate is passphrase protected. Finally, you can also provide a proxy configuration parameter in the format "http://host:port". Username/password authentication with proxies is not currently supported.  
+  
 Important Note On Intuit Tokens
 ------------------------------------------
 **Before attempting to use this gem, you must read the Aggregation & Categorization API documentation on the Intuit Partner Platform web site. Understanding how the API works is critical to a successful implementation. If you do not understand the API, you may make mistakes that have serious unintended consequences for your users.**
