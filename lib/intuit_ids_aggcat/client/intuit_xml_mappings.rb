@@ -221,7 +221,8 @@ module IntuitIdsAggcat
 
   class OtherAccount < Account
     include XML::Mapping
-	end
+    use_mapping :_default
+  end
   
   class InvestmentAccount < Account
     include XML::Mapping
