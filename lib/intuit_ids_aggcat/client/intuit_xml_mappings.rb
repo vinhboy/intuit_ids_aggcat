@@ -41,6 +41,7 @@ module IntuitIdsAggcat
   class CreditAccount < Account; end
   class InvestmentAccount < Account; end     
   class LoanAccount < Account; end    
+  class OtherAccount < Account; end  
   class Choice; end
   class Transaction; end
   class BankingTransaction < Transaction; end
