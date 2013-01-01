@@ -4,12 +4,18 @@ intuit_ids_aggcat - A wrapper for Intuit's Aggregation & Categorization Data Ser
 
 Configuration
 -----------------
-While the first release of this gem is being developed, it will not be included in gem directories. Installation of the gem can be accomplished by cloning the code from Github and installing manually:  
+While the first release of this gem is being developed, newer versions may be available on Github that have not yet been pushed to the RubyGems repository. Installation of the gem from RubyGems can be done by running:  
+`gem install intuit_ids_aggcat`  
+
+or the latest version can be cloned from Github and installing manually:  
 `git clone https://github.com/rewardsummit/intuit_ids_aggcat.git`  
-`gem build intuit_ids_aggcat.gemspec && gem install intuit_ids_aggcat-0.0.1.gem`  
+`gem build intuit_ids_aggcat.gemspec && gem install intuit_ids_aggcat-0.0.x.gem`  
   
 ... or in a Rails environment using bundler by adding this to your Gemfile:  
-`gem 'quicken_parser', :git => 'https://github.com/rewardsummit/intuit_ids_aggcat.git'`
+`gem 'intuit_ids_aggcat', :git => 'https://github.com/rewardsummit/intuit_ids_aggcat.git'`  
+for the latest development version in Github or:  
+`gem 'intuit_ids_aggcat'`  
+for the version in the RubyGems repository that should be production-ready.
   
 Once installed, you can manually configure the gem at runtime (e.g. in a pure Ruby environment) by doing:  
 `require "intuit_ids_aggcat"`  
