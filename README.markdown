@@ -1,6 +1,6 @@
 intuit_ids_aggcat - A wrapper for Intuit's Aggregation & Categorization Data Services
 ==================================================================
-**Important Note: This gem is still under active development for its first release. Features are missing or imcomplete. It is released under the Apache 2.0 license "as-is" without warranty.**  
+**Important Note: This gem is still under active development. Some features provided by Intuit may missing or imcomplete. It is released under the Apache 2.0 license "as-is" without warranty.**  
 
 Configuration
 -----------------
@@ -87,7 +87,7 @@ Return values from all methods except get_institutions and get_institution_detai
   
 Testing
 ----------
-In order to thoroughly test the Intuit integration, many of the RSpec tests included with this gem make live calls to the Intuit services and use Intuit's test financial institutions/customers/accounts. In order for this to work, real OAuth tokens and the corresponding private  key and issuer ID need to be used. To configure these the tests assume there is a YAML configuration in spec/config/real_config.yml in the following format:  
+In order to thoroughly test the Intuit integration, many of the RSpec tests included with this gem make live calls to the Intuit services and use Intuit's test financial institutions/customers/accounts. In order for this to work, real OAuth tokens and the corresponding private key and issuer ID need to be used. To configure these the tests assume there is a YAML configuration in spec/config/real_config.yml in the following format:  
   
 `certificate_path: key_file`  
 `issuer_id: issuer_id`  
