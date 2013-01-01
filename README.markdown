@@ -1,6 +1,6 @@
 intuit_ids_aggcat - A wrapper for Intuit's Aggregation & Categorization Data Services
 ==================================================================
-**Important Note: This gem is still under active development. Some features provided by Intuit may missing or imcomplete. It is released under the Apache 2.0 license "as-is" without warranty.**  
+**Important Note: This gem is still under active development. Some features provided by Intuit may be missing or imcomplete in this gem. It is released under the Apache 2.0 license "as-is" without warranty.**  
 
 Configuration
 -----------------
