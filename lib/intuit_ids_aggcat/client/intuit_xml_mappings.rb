@@ -4,7 +4,7 @@ class DateTimeNode < XML::Mapping::SingleAttributeNode
     path,*args = super(*args)
     @path = XML::XXPath.new(path)
     args
-  end
+  end #
 
   def extract_attr_value(xml)
     # without millisecs
