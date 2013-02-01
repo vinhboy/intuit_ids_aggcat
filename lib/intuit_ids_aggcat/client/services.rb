@@ -126,7 +126,8 @@ module IntuitIdsAggcat
         # Explicitly refreshes the customer account at an institution
         def update_institution_login_explicit_refresh login_id, username, oauth_token_info = IntuitIdsAggcat::Client::Saml.get_tokens(username), consumer_key = IntuitIdsAggcat.config.oauth_consumer_key, consumer_secret = IntuitIdsAggcat.config.oauth_consumer_secret
           url = "https://financialdatafeed.platform.intuit.com/v1/logins/#{login_id}?refresh=true"
-          response = oauth_put_request url, oauth_token_info
+          body = InstitutionLogin.new.save_to_xml.to_s
+          response = oauth_put_request url, oauth_token_info, body
           return response
         end
 
@@ -222,17 +223,16 @@ module IntuitIdsAggcat
 
         ##
         # Helper method to issue put requests
-        def oauth_put_request url, oauth_token_info, consumer_key = IntuitIdsAggcat.config.oauth_consumer_key, consumer_secret = IntuitIdsAggcat.config.oauth_consumer_secret, timeout = 120
+        def oauth_put_request url, oauth_token_info, body = nil, consumer_key = IntuitIdsAggcat.config.oauth_consumer_key, consumer_secret = IntuitIdsAggcat.config.oauth_consumer_secret, timeout = 120
           oauth_token = oauth_token_info[:oauth_token]
           oauth_token_secret = oauth_token_info[:oauth_token_secret]
 
-          options = { :request_token_path => 'https://financialdatafeed.platform.intuit.com', :timeout => timeout } 
+          options = { :request_token_path => 'https://financialdatafeed.platform.intuit.com', :timeout => timeout, :http_method => :put } 
           options = options.merge({ :proxy => IntuitIdsAggcat.config.proxy}) if !IntuitIdsAggcat.config.proxy.nil?
           consumer = OAuth::Consumer.new(consumer_key, consumer_secret, options)
           access_token = OAuth::AccessToken.new(consumer, oauth_token, oauth_token_secret)
           begin
-            response = access_token.put(url, nil, { 'Host' => 'financialdatafeed.platform.intuit.com' })
-            return response
+            response = access_token.put(url, body, { "Content-Type"=>'application/xml', 'Host' => 'financialdatafeed.platform.intuit.com' })
             response_xml = REXML::Document.new response.body
           rescue REXML::ParseException => msg
               #Rails.logger.error "REXML Parse Exception"
@@ -241,7 +241,6 @@ module IntuitIdsAggcat
           end
           { :response_code => response.code, :response_xml => response_xml }
         end
-
 
         ##
         # Helper method to issue delete requests
