@@ -200,7 +200,7 @@ module IntuitIdsAggcat
     date_time_node :aggregation_attempt_date, "aggrAttemptDate", :default_value => nil
     text_node :currency_code, "currencyCode", :default_value => nil
     text_node :bank_id, "bankId", :default_value => nil
-    numeric_node :institution_login_id, "institutionLoginId", :default_value => next_payment_principal_amount  
+    numeric_node :institution_login_id, "institutionLoginId", :default_value => nil  
   end
 
   class BankingAccount < Account
