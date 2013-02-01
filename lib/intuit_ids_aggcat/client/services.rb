@@ -123,6 +123,14 @@ module IntuitIdsAggcat
         end
 
         ##
+        # Gets accounts for a specific customer login_id
+        def get_login_accounts login_id, username, oauth_token_info = IntuitIdsAggcat::Client::Saml.get_tokens(username), consumer_key = IntuitIdsAggcat.config.oauth_consumer_key, consumer_secret = IntuitIdsAggcat.config.oauth_consumer_secret
+          url = "https://financialdatafeed.platform.intuit.com/v1/logins/#{login_id}/accounts"
+          response = oauth_get_request url, oauth_token_info
+          accounts = AccountList.load_from_xml(response[:response_xml].root)
+        end
+
+        ##
         # Explicitly refreshes the customer account at an institution
         def update_institution_login_explicit_refresh login_id, username, oauth_token_info = IntuitIdsAggcat::Client::Saml.get_tokens(username), consumer_key = IntuitIdsAggcat.config.oauth_consumer_key, consumer_secret = IntuitIdsAggcat.config.oauth_consumer_secret
           url = "https://financialdatafeed.platform.intuit.com/v1/logins/#{login_id}?refresh=true"
