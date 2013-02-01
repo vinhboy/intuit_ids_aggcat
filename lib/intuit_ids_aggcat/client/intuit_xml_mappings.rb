@@ -182,8 +182,7 @@ module IntuitIdsAggcat
   end
 
   class Account
-    include XML::Mapping
-    numeric_node :login_id, "loginId", :default_value => nil    
+    include XML::Mapping  
     numeric_node :account_id, "accountId", :default_value => nil
     text_node :status, "status", :default_value => nil
     text_node :account_number, "accountNumber", :default_value => nil
@@ -201,8 +200,7 @@ module IntuitIdsAggcat
     date_time_node :aggregation_attempt_date, "aggrAttemptDate", :default_value => nil
     text_node :currency_code, "currencyCode", :default_value => nil
     text_node :bank_id, "bankId", :default_value => nil
-    numeric_node :institution_login_id, "institutionLoginId", :default_value => nil
-    numeric_node :institution_login_id2, "institutioinLoginId", :default_value => nil    
+    numeric_node :institution_login_id, "institutionLoginId", :default_value => nil  
   end
 
   class BankingAccount < Account
