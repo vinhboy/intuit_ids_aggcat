@@ -232,10 +232,11 @@ module IntuitIdsAggcat
           access_token = OAuth::AccessToken.new(consumer, oauth_token, oauth_token_secret)
           begin
             response = access_token.put(url, nil, { "Content-Type"=>'application/xml', 'Host' => 'financialdatafeed.platform.intuit.com' })
+            return response
             response_xml = REXML::Document.new response.body
           rescue REXML::ParseException => msg
-              Rails.logger.error "REXML Parse Exception"
-              Rails.logger.error msg
+              #Rails.logger.error "REXML Parse Exception"
+              #Rails.logger.error msg
               return nil
           end
           { :response_code => response.code, :response_xml => response_xml }
