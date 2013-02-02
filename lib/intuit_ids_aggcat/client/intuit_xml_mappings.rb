@@ -330,12 +330,16 @@ module IntuitIdsAggcat
   class Common
     include XML::Mapping
     text_node :normalized_payee_name, "normalizedPayeeName", :default_value => nil
+    text_node :merchant, "merchant", :default_value => nil   
+    text_node :sic_code, "sic", :default_value => nil       
   end
 
   class Context
     include XML::Mapping
     text_node :source, "source", :default_value => nil
     text_node :category_name, "categoryName", :default_value => nil
+    text_node :context_type, "contextType", :default_value => nil    
+    text_node :schedule_c_code, "scheduleC", :default_value => nil  
   end
 
   class Categorization
@@ -371,7 +375,6 @@ module IntuitIdsAggcat
     date_time_node :available_date, "availableDate", :default_value => nil
     numeric_node :amount, "amount", :default_value => nil
     numeric_node :running_balance_amount, "runningBalanceAmount", :default_value => nil
-    numeric_node :sic, "sic", :default_value => nil
     boolean_node :pending, "pending", "true", "false", :default_value => nil
     object_node :categorization, "categorization", :class => Categorization, :default_value => nil
   end
