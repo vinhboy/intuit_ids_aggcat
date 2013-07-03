@@ -2,6 +2,8 @@ intuit_ids_aggcat - A wrapper for Intuit's Aggregation & Categorization Data Ser
 ==================================================================
 **Important Note: This gem is still under active development. Some features provided by Intuit may be missing or imcomplete in this gem. It is released under the Apache 2.0 license "as-is" without warranty.**  
 
+Notice for Ruby 1.8.7 and Rails 2.x users: This gem has been tested with Ruby 1.9.2 and 1.9.3 and Rails 3.2.x. There are some known problems with the syntax used for hashes and with a lack of millisecond time formats that prevent the gem from working with Ruby 1.8.7 currently. Thanks to Vinh Pham for pointing this out.  
+
 Configuration
 -----------------
 While the first release of this gem is being developed, newer versions may be available on Github that have not yet been pushed to the RubyGems repository. Installation of the gem from RubyGems can be done by running:  
@@ -104,6 +106,11 @@ Note that the tests do create a test user to validate the integration and this w
   
 The .gitignore file contains spec/config/real_config.yml and spec/config/real_cert.key to prevent sensitive information from being checked in. Note that if you change the names, or .gitignore is modified, this may not hold true. Exercise caution when commiting code to public repos.  
   
+Changelog
+-----------------
+0.0.7: Added support for updating institution login information with IntuitIdsAggcat::Client::Services.update_institution_login_with_credentials
+
+
 Contributing
 -----------------
 Feel free to fork this repo, make changes and submit a pull request. 

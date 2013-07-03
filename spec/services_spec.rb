@@ -63,6 +63,9 @@ describe IntuitIdsAggcat::Client::Services do
     x.should_not be_nil
     x.banking_accounts.count.should be > 2
 
+    # get the login ID to use later in the test
+    login_id = x.banking_accounts[0].institution_login_id
+
     # get transactions from 90 days ago until current
     start = Time.now - (90 * 24 * 60 * 60)
     y = IntuitIdsAggcat::Client::Services.get_account_transactions "9cj2hbjfgh47cna72", x.banking_accounts[0].account_id, start
@@ -70,6 +73,10 @@ describe IntuitIdsAggcat::Client::Services do
     y.banking_transactions[0].id.should_not be_nil
     y.banking_transactions[0].amount.should_not be_nil
     
+    # refresh credentials and confirm we get accounts back again
+    x = IntuitIdsAggcat::Client::Services.update_institution_login_with_credentials login_id, "9cj2hbjfgh47cna72", { "Banking Userid" => "direct", "Banking Password" => "anyvalue" } 
+    x[:update_response][:response_code].should == "200"
+
     # delete customer
     x = IntuitIdsAggcat::Client::Services.delete_customer "9cj2hbjfgh47cna72"
     x[:response_code].should == "200"

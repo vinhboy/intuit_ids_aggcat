@@ -131,7 +131,28 @@ module IntuitIdsAggcat
         end
 
         ##
-        # Explicitly refreshes the customer account at an institution
+        # Updates an existing customer account with new credentials at an institution
+        # Response can include an MFA challenge; see the return values for discover_and_add_accounts_with_credentials for
+        # more information on possible responses
+        def update_institution_login_with_credentials login_id, username, creds_hash, oauth_token_info = IntuitIdsAggcat::Client::Saml.get_tokens(username), consumer_key = IntuitIdsAggcat.config.oauth_consumer_key, consumer_secret = IntuitIdsAggcat.config.oauth_consumer_secret
+          url = "https://financialdatafeed.platform.intuit.com/v1/logins/#{login_id}?refresh=true"
+          credentials_array = []
+          creds_hash.each do |k,v|
+            c = Credential.new
+            c.name = k
+            c.value = v
+            credentials_array.push c
+          end
+          creds = Credentials.new
+          creds.credential = credentials_array
+          il = InstitutionLogin.new
+          il.credentials = creds
+          response = oauth_put_request url, oauth_token_info, il.save_to_xml.to_s
+          update_credentials_data_to_hash response
+        end
+
+        ##
+        # Explicitly refreshes the customer account with new credentials at an institution
         def update_institution_login_explicit_refresh login_id, username, oauth_token_info = IntuitIdsAggcat::Client::Saml.get_tokens(username), consumer_key = IntuitIdsAggcat.config.oauth_consumer_key, consumer_secret = IntuitIdsAggcat.config.oauth_consumer_secret
           url = "https://financialdatafeed.platform.intuit.com/v1/logins/#{login_id}?refresh=true"
           body = InstitutionLogin.new.save_to_xml.to_s
@@ -151,6 +172,39 @@ module IntuitIdsAggcat
           response = oauth_get_request url, oauth_token_info
           xml = REXML::Document.new response[:response_xml].to_s
           tl = IntuitIdsAggcat::TransactionList.load_from_xml xml.root
+        end
+
+        ## 
+        # Helper method for parsing discover credential update response data
+        def update_credentials_data_to_hash daa
+          challenge_type = "none"
+          if daa[:response_code] == "200"
+            # return account list
+            accounts = AccountList.load_from_xml(daa[:response_xml].root)
+            { update_response: daa, challenge_type: challenge_type, challenge: nil, description: "Account information updated." }
+          elsif daa[:response_code] == "401" && daa[:challenge_session_id]
+            # return challenge
+            challenge = Challenges.load_from_xml(daa[:response_xml].root)
+            challenge_type = "unknown"
+            if challenge.save_to_xml.to_s.include?("<choice>")
+              challenge_type = "choice"
+            elsif challenge.save_to_xml.to_s.include?("image")
+              challenge_type ="image"
+            else
+              challenge_type = "text"
+            end
+            { update_response: daa, accounts: nil, challenge_type: challenge_type, challenge: challenge, challenge_session_id: daa[:challenge_session_id], challenge_node_id: daa[:challenge_node_id], description: "Multi-factor authentication required to update credentials." }
+          elsif daa[:response_code] == "404"
+            { update_response: daa, accounts: nil, challenge_type: challenge_type, challenge: nil, description: "Login ID not found." }
+          elsif daa[:response_code] == "408"
+            { update_response: daa, accounts: nil, challenge_type: challenge_type, challenge: nil, description: "Timed out." }
+          elsif daa[:response_code] == "500"
+            { update_response: daa, accounts: nil, challenge_type: challenge_type, challenge: nil, description: "Internal server error." }
+          elsif daa[:response_code] == "503"
+            { update_response: daa, accounts: nil, challenge_type: challenge_type, challenge: nil, description: "Problem at the finanical institution." }
+          else
+            { update_response: daa, accounts: nil, challenge_type: challenge_type, challenge: nil, description: "Unknown error." }
+          end
         end
 
         ## 
