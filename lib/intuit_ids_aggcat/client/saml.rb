@@ -15,9 +15,10 @@ module IntuitIdsAggcat
       @token_timeout = 600
       class << self
 
-        def get_saml_assertion_xml issuer_id, username = "default", private_key_path, private_key_string, private_key_password, instant
+        def get_saml_assertion_xml issuer_id, username, private_key_path, private_key_string, private_key_password, instant
+          username ||= 'default'
           id = "_#{SecureRandom.uuid.gsub!(/-/, '')}"
-          time_format = "%Y-%m-%dT%T.%LZ"
+          time_format = "%Y-%m-%dT%T.000Z"
           before = instant - 5*60
           after = instant + @token_timeout
           saml_assertion_xml = <<-EOF_XML
@@ -97,8 +98,8 @@ EOF_XML
           #http.set_debug_output($stdout)
           response = http.request(request)
           params = CGI::parse(response.body)
-          return {oauth_token_secret: params["oauth_token_secret"][0],
-                  oauth_token: params["oauth_token"][0] }
+          return {:oauth_token_secret => params["oauth_token_secret"][0],
+                  :oauth_token => params["oauth_token"][0] }
           
         end
         def get_oauth_info issuer_id, username, oauth_consumer_key, oauth_consumer_secret, private_key_path, private_key_string, private_key_password

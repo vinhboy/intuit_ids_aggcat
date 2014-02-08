@@ -20,7 +20,7 @@ module IntuitIdsAggcat
         # consumer_key and consumer_secret will be retrieved from the Configuration class if not provided
         def get_institutions oauth_token_info = IntuitIdsAggcat::Client::Saml.get_tokens("default"), consumer_key = IntuitIdsAggcat.config.oauth_consumer_key, consumer_secret = IntuitIdsAggcat.config.oauth_consumer_secret
           response = oauth_get_request "https://financialdatafeed.platform.intuit.com/rest-war/v1/institutions", oauth_token_info, consumer_key, consumer_secret
-          if response[:response_code] == "200"
+          if response and response[:response_code] == "200"
             institutions = Institutions.load_from_xml(response[:response_xml].root)
             institutions.institutions
           else
@@ -42,7 +42,12 @@ module IntuitIdsAggcat
         # username and account ID must be provided, if no oauth_token_info is provided, new tokens will be provisioned using username
         def get_account username, account_id, oauth_token_info = IntuitIdsAggcat::Client::Saml.get_tokens(username), consumer_key = IntuitIdsAggcat.config.oauth_consumer_key, consumer_secret = IntuitIdsAggcat.config.oauth_consumer_secret
           url = "https://financialdatafeed.platform.intuit.com/rest-war/v1/accounts/#{account_id}"
-          oauth_get_request url, oauth_token_info
+          response = oauth_get_request url, oauth_token_info
+          if response and response[:response_code] == "200"
+            accounts = AccountList.load_from_xml(response[:response_xml].root)
+          else
+            return nil
+          end
         end
 
 
@@ -181,7 +186,7 @@ module IntuitIdsAggcat
           if daa[:response_code] == "200"
             # return account list
             accounts = AccountList.load_from_xml(daa[:response_xml].root)
-            { update_response: daa, challenge_type: challenge_type, challenge: nil, description: "Account information updated." }
+            { :update_response => daa, :challenge_type => challenge_type, :challenge => nil, :description => "Account information updated." }
           elsif daa[:response_code] == "401" && daa[:challenge_session_id]
             # return challenge
             challenge = Challenges.load_from_xml(daa[:response_xml].root)
@@ -193,17 +198,17 @@ module IntuitIdsAggcat
             else
               challenge_type = "text"
             end
-            { update_response: daa, accounts: nil, challenge_type: challenge_type, challenge: challenge, challenge_session_id: daa[:challenge_session_id], challenge_node_id: daa[:challenge_node_id], description: "Multi-factor authentication required to update credentials." }
+            { :update_response => daa, :accounts => nil, :challenge_type => challenge_type, :challenge => challenge, :challenge_session_id => daa[:challenge_session_id], :challenge_node_id => daa[:challenge_node_id], :description => "Multi-factor authentication required to update credentials." }
           elsif daa[:response_code] == "404"
-            { update_response: daa, accounts: nil, challenge_type: challenge_type, challenge: nil, description: "Login ID not found." }
+            { :update_response => daa, :accounts => nil, :challenge_type => challenge_type, :challenge => nil, :description => "Login ID not found." }
           elsif daa[:response_code] == "408"
-            { update_response: daa, accounts: nil, challenge_type: challenge_type, challenge: nil, description: "Timed out." }
+            { :update_response => daa, :accounts => nil, :challenge_type => challenge_type, :challenge => nil, :description => "Timed out." }
           elsif daa[:response_code] == "500"
-            { update_response: daa, accounts: nil, challenge_type: challenge_type, challenge: nil, description: "Internal server error." }
+            { :update_response => daa, :accounts => nil, :challenge_type => challenge_type, :challenge => nil, :description => "Internal server error." }
           elsif daa[:response_code] == "503"
-            { update_response: daa, accounts: nil, challenge_type: challenge_type, challenge: nil, description: "Problem at the finanical institution." }
+            { :update_response => daa, :accounts => nil, :challenge_type => challenge_type, :challenge => nil, :description => "Problem at the finanical institution." }
           else
-            { update_response: daa, accounts: nil, challenge_type: challenge_type, challenge: nil, description: "Unknown error." }
+            { :update_response => daa, :accounts => nil, :challenge_type => challenge_type, :challenge => nil, :description => "Unknown error." }
           end
         end
 
@@ -214,7 +219,7 @@ module IntuitIdsAggcat
           if daa[:response_code] == "201"
             # return account list
             accounts = AccountList.load_from_xml(daa[:response_xml].root)
-            { discover_response: daa, accounts: accounts, challenge_type: challenge_type, challenge: nil, description: "Account information retrieved." }
+            { :discover_response => daa, :accounts => accounts, :challenge_type => challenge_type, :challenge => nil, :description => "Account information retrieved." }
           elsif daa[:response_code] == "401" && daa[:challenge_session_id]
             # return challenge
             challenge = Challenges.load_from_xml(daa[:response_xml].root)
@@ -226,17 +231,17 @@ module IntuitIdsAggcat
             else
               challenge_type = "text"
             end
-            { discover_response: daa, accounts: nil, challenge_type: challenge_type, challenge: challenge, challenge_session_id: daa[:challenge_session_id], challenge_node_id: daa[:challenge_node_id], description: "Multi-factor authentication required to retrieve accounts." }
+            { :discover_response => daa, :accounts => nil, :challenge_type => challenge_type, :challenge => challenge, :challenge_session_id => daa[:challenge_session_id], :challenge_node_id => daa[:challenge_node_id], :description => "Multi-factor authentication required to retrieve accounts." }
           elsif daa[:response_code] == "404"
-            { discover_response: daa, accounts: nil, challenge_type: challenge_type, challenge: nil, description: "Institution not found." }
+            { :discover_response => daa, :accounts => nil, :challenge_type => challenge_type, :challenge => nil, :description => "Institution not found." }
           elsif daa[:response_code] == "408"
-            { discover_response: daa, accounts: nil, challenge_type: challenge_type, challenge: nil, description: "Multi-factor authentication session expired." }
+            { :discover_response => daa, :accounts => nil, :challenge_type => challenge_type, :challenge => nil, :description => "Multi-factor authentication session expired." }
           elsif daa[:response_code] == "500"
-            { discover_response: daa, accounts: nil, challenge_type: challenge_type, challenge: nil, description: "Internal server error." }
+            { :discover_response => daa, :accounts => nil, :challenge_type => challenge_type, :challenge => nil, :description => "Internal server error." }
           elsif daa[:response_code] == "503"
-            { discover_response: daa, accounts: nil, challenge_type: challenge_type, challenge: nil, description: "Problem at the finanical institution." }
+            { :discover_response => daa, :accounts => nil, :challenge_type => challenge_type, :challenge => nil, :description => "Problem at the finanical institution." }
           else
-            { discover_response: daa, accounts: nil, challenge_type: challenge_type, challenge: nil, description: "Unknown error." }
+            { :discover_response => daa, :accounts => nil, :challenge_type => challenge_type, :challenge => nil, :description => "Unknown error." }
           end
         end
 
