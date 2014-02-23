@@ -306,7 +306,15 @@ module IntuitIdsAggcat
               #Rails.logger.error msg
               return nil
           end
-          { :response_code => response.code, :response_xml => response_xml }
+          
+          # updateInstitutionLogin returns MFA headers
+          challenge_session_id = challenge_node_id = nil
+          if !response["challengeSessionId"].nil?
+            challenge_session_id = response["challengeSessionId"]
+            challenge_node_id = response["challengeNodeId"]
+          end
+
+          { :challenge_session_id => challenge_session_id, :challenge_node_id => challenge_node_id, :response_code => response.code, :response_xml => response_xml }
         end
 
         ##
