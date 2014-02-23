@@ -175,8 +175,14 @@ module IntuitIdsAggcat
             url = "#{url}&txnEndDate=#{txn_end}"
           end
           response = oauth_get_request url, oauth_token_info
-          xml = REXML::Document.new response[:response_xml].to_s
-          tl = IntuitIdsAggcat::TransactionList.load_from_xml xml.root
+          
+          # parse notRefreshedReason returned by getAccountTransactions
+          if response[:response_xml] and response[:response_xml].root and response[:response_xml].root.attributes["notRefreshedReason"] == "CHALLENGE_RESPONSE_REQUIRED"
+            { :response_code => '401', :response_xml => response[:response_xml], :not_refreshed_reason => response[:response_xml].root.attributes["notRefreshedReason"] }
+          else
+            xml = REXML::Document.new response[:response_xml].to_s
+            tl = IntuitIdsAggcat::TransactionList.load_from_xml xml.root
+          end
         end
 
         ## 
