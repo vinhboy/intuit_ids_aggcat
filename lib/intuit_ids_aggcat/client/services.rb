@@ -204,7 +204,7 @@ module IntuitIdsAggcat
             else
               challenge_type = "text"
             end
-            { :update_response => daa, :accounts => nil, :challenge_type => challenge_type, :challenge => challenge, :challenge_session_id => daa[:challenge_session_id], :challenge_node_id => daa[:challenge_node_id], :description => "Multi-factor authentication required to update credentials." }
+            { :update_response => daa, :accounts => nil, :challenge_type => challenge_type, :challenge => challenge, :challenge_session_id => daa[:challenge_session_id], :challenge_node_id => daa[:challenge_node_id], :description => "Multi-factor authentication required." }
           elsif daa[:response_code] == "404"
             { :update_response => daa, :accounts => nil, :challenge_type => challenge_type, :challenge => nil, :description => "Login ID not found." }
           elsif daa[:response_code] == "408"
