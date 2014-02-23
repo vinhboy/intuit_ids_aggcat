@@ -162,7 +162,7 @@ module IntuitIdsAggcat
           url = "https://financialdatafeed.platform.intuit.com/v1/logins/#{login_id}?refresh=true"
           body = InstitutionLogin.new.save_to_xml.to_s
           response = oauth_put_request url, oauth_token_info, body
-          return response
+          update_credentials_data_to_hash response
         end
 
         ##
