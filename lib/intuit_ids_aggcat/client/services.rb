@@ -182,6 +182,7 @@ module IntuitIdsAggcat
           else
             xml = REXML::Document.new response[:response_xml].to_s
             tl = IntuitIdsAggcat::TransactionList.load_from_xml xml.root
+            { :response_code => '200', :response_xml => response[:response_xml], :transaction_list => tl }
           end
         end
 
