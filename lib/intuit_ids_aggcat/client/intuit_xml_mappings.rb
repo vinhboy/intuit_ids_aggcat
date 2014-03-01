@@ -199,6 +199,7 @@ module IntuitIdsAggcat
     date_time_node :last_transaction_date, "lastTxnDate", :default_value => nil
     date_time_node :aggregation_success_date, "aggrSuccessDate", :default_value => nil
     date_time_node :aggregation_attempt_date, "aggrAttemptDate", :default_value => nil
+    text_node :aggregation_status_code, "aggrStatusCode", :default_value => nil
     text_node :currency_code, "currencyCode", :default_value => nil
     text_node :bank_id, "bankId", :default_value => nil
     numeric_node :institution_login_id, "institutionLoginId", :default_value => nil  
@@ -487,5 +488,7 @@ module IntuitIdsAggcat
     array_node :loan_transactions, "LoanTransaction", :class => LoanTransaction, :default_value => nil
     array_node :investment_transactions, "InvestmentTransaction", :class => InvestmentTransaction, :default_value => nil
     array_node :rewards_transactions, "RewardsTransaction", :class => RewardsTransaction, :default_value => nil
+    text_node  :not_refreshed_reason, "@notRefreshedReason", :default_value => nil
+    text_node  :response_code, "@responseCode", :default_value => nil
   end 
 end
